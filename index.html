@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kenworth Fleet Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Tailwind vía CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800 p-6">
+  <div id="root"></div>
+
+  <script type="module">
+    import React from 'https://esm.sh/react'
+    import ReactDOM from 'https://esm.sh/react-dom'
+    import {
+      BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+      PieChart, Pie, Cell
+    } from 'https://esm.sh/recharts'
+    import {
+      Truck, TrendingUp, Activity, BarChart3, Target, Clock, Settings, Award
+    } from 'https://esm.sh/lucide-react'
+
+    const summaryMetrics = {
+      totalTrips: 57699,
+      totalFleetSize: 1837,
+      activeUnits: 1730,
+      avgTripsPerUnit: 33.4,
+      reportPeriod: '2024-2025'
+    }
+
+    const topTrucksData = [
+      { plate: '50***9', trips: 681, year: 2014, rank: 1, age: 11 },
+      { plate: '51***9', trips: 539, year: 2014, rank: 2, age: 11 },
+      { plate: '42***5', trips: 388, year: 2003, rank: 3, age: 22 },
+      { plate: '27***5', trips: 382, year: 2000, rank: 4, age: 25 },
+      { plate: '68***B', trips: 367, year: 2000, rank: 5, age: 25 },
+      { plate: '44***G', trips: 355, year: 2024, rank: 6, age: 1 },
+      { plate: '39***6', trips: 338, year: 2023, rank: 7, age: 2 },
+      { plate: '47***1', trips: 330, year: 2003, rank: 8, age: 22 },
+      { plate: '73***4', trips: 325, year: 1994, rank: 9, age: 31 },
+      { plate: '33***7', trips: 309, year: 1998, rank: 10, age: 27 }
+    ]
+
+    const fleetByYearData = [
+      { period: '1987-1999', units: 38, totalTrips: 1695, avgTrips: 44.6, color: '#8B5CF6' },
+      { period: '2000-2009', units: 325, totalTrips: 13762, avgTrips: 42.3, color: '#06B6D4' },
+      { period: '2010-2015', units: 628, totalTrips: 13508, avgTrips: 21.5, color: '#10B981' },
+      { period: '2016-2020', units: 347, totalTrips: 12046, avgTrips: 34.7, color: '#F59E0B' },
+      { period: '2021-2025', units: 303, totalTrips: 14227, avgTrips: 47.0, color: '#EF4444' }
+    ]
+
+    const distributionData = [
+      { name: '1987-1999\nLegacy', value: 38, percentage: 2.2, color: '#8B5CF6' },
+      { name: '2000-2009\nMillennium', value: 325, percentage: 18.8, color: '#06B6D4' },
+      { name: '2010-2015\nExpansion', value: 628, percentage: 36.3, color: '#10B981' },
+      { name: '2016-2020\nModern', value: 347, percentage: 20.1, color: '#F59E0B' },
+      { name: '2021-2025\nLatest', value: 303, percentage: 17.5, color: '#EF4444' }
+    ]
+
+    function KenworthFleetReport() {
+      return (
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center mb-6">
+              <Truck className="w-16 h-16 text-red-500 mr-4" />
+              <div>
+                <h1 className="text-5xl font-bold text-white mb-2">KENWORTH FLEET</h1>
+                <h2 className="text-3xl font-semibold text-blue-300">
+                  COMPREHENSIVE PERFORMANCE ANALYSIS
+                </h2>
+              </div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 border border-white/20 inline-block">
+              <p className="text-xl text-gray-200">
+                Fleet Analysis by Unit Year & Performance Metrics
+              </p>
+              <p className="text-lg text-gray-300 mt-1">
+                Breakdown of {summaryMetrics.totalFleetSize.toLocaleString()} trucks
+              </p>
+            </div>
+          </div>
+
+          {/* KPIs */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-gradient-to-br from-green-500/20 to-green-600/30 backdrop-blur-md rounded-xl p-6 border border-green-400/20">
+              <div className="flex items-center justify-between mb-3">
+                <TrendingUp className="w-12 h-12 text-green-400" />
+                <div className="text-right">
+                  <p className="text-green-200 text-sm font-medium">OPERACIONES</p>
+                  <p className="text-4xl font-bold text-white">
+                    {summaryMetrics.totalTrips.toLocaleString()}
+                  </p>
+                  <p className="text-green-300 text-sm">Viajes completados</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/30 backdrop-blur-md rounded-xl p-6 border border-blue-400/20">
+              <div className="flex items-center justify-between mb-3">
+                <Truck className="w-12 h-12 text-blue-400" />
+                <div className="text-right">
+                  <p className="text-blue-200 text-sm font-medium">FLOTILLA</p>
+                  <p className="text-4xl font-bold text-white">
+                    {summaryMetrics.totalFleetSize.toLocaleString()}
+                  </p>
+                  <p className="text-blue-300 text-sm">Camiones Kenworth</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-gradient-to-br from-yellow-500/20 to-yellow-600/30 backdrop-blur-md rounded-xl p-6 border border-yellow-400/20">
+              <div className="flex items-center justify-between mb-3">
+                <Activity className="w-12 h-12 text-yellow-400" />
+                <div className="text-right">
+                  <p className="text-yellow-200 text-sm font-medium">EFICIENCIA</p>
+                  <p className="text-4xl font-bold text-white">
+                    {summaryMetrics.avgTripsPerUnit}
+                  </p>
+                  <p className="text-yellow-300 text-sm">Viajes por unidad</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Gráficas */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+              <div className="flex items-center mb-4">
+                <BarChart3 className="w-6 h-6 text-blue-400 mr-3" />
+                <h3 className="text-2xl font-bold text-white">Rendimiento por periodo</h3>
+              </div>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={fleetByYearData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="period" stroke="#9CA3AF" fontSize={11} angle={-45} textAnchor="end" height={60} />
+                  <YAxis stroke="#9CA3AF" />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'rgba(17,24,39,0.9)',
+                      border: '1px solid rgba(75,85,99,0.3)',
+                      borderRadius: '8px',
+                      color: 'white'
+                    }}
+                    formatter={(value, name) => [
+                      name === 'avgTrips'
+                        ? `${value} avg/unit`
+                        : name === 'units'
+                        ? `${value} unidades`
+                        : `${value.toLocaleString()} viajes`,
+                      name === 'avgTrips'
+                        ? 'Eficiencia'
+                        : name === 'units'
+                        ? 'Flotilla'
+                        : 'Operaciones'
+                    ]}
+                  />
+                  <Bar dataKey="avgTrips" radius={[4,4,0,0]} fill="#3B82F6" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+              <div className="flex items-center mb-4">
+                <Target className="w-6 h-6 text-purple-400 mr-3" />
+                <h3 className="text-2xl font-bold text-white">Distribución por año</h3>
+              </div>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={distributionData}
+                    dataKey="value"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                    startAngle={90}
+                    endAngle={-270}
+                    label={({ name, percentage }) => `${name} ${percentage}%`}
+                    labelLine={false}
+                    fontSize={10}
+                  >
+                    {distributionData.map((entry, i) => (
+                      <Cell key={i} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'rgba(17,24,39,0.9)',
+                      border: '1px solid rgba(75,85,99,0.3)',
+                      borderRadius: '8px',
+                      color: 'white'
+                    }}
+                    formatter={(value) => [`${value} unidades`, 'Flotilla']}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          
+        </div>
+      )
+    }
+
+    ReactDOM.render(
+      <KenworthFleetReport/>,
+      document.getElementById('root')
+    )
+  </script>
+</body>
+</html>
